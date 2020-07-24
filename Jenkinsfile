@@ -16,7 +16,7 @@ properties(
                     name: 'FedoraMessaging',
                     overrides: [
                         topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
-                        queue: 'osci-pipelines-queue-7'
+                        queue: 'osci-pipelines-queue-15'
                     ],
                     checks: [
                         [field: '$.artifact.release', expectedValue: '^f33$'],
