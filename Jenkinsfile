@@ -9,21 +9,6 @@ properties(
             [
                 string(description: 'CI Message', defaultValue: '', name: 'CI_MESSAGE'),
             ]
-        ),
-        pipelineTriggers(
-            [[$class: 'CIBuildTrigger',
-                noSquash: true,
-                providerData: [
-                    $class: 'FedMsgSubscriberProviderData',
-                    name: 'fedora-fedmsg',
-                    overrides: [
-                        topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete'
-                    ],
-                    checks: [
-                        [field: '$.artifact.release', expectedValue: 'f33'],
-                    ]
-                ]
-            ]]
         )
     ]
 )
