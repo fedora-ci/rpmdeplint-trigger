@@ -1,7 +1,5 @@
 #!groovy
 
-// @Library('fedora-pipeline-library@prototype') _
-
 
 properties(
     [
@@ -14,13 +12,14 @@ properties(
             [[$class: 'CIBuildTrigger',
                 noSquash: true,
                 providerData: [
-                    $class: 'FedMsgSubscriberProviderData',
-                    name: 'fedora-fedmsg',
+                    $class: 'RabbitMQSubscriberProviderData',
+                    name: 'FedoraMessaging',
                     overrides: [
-                        topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete'
+                        topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
+                        queue: 'osci-pipelines-queue-7'
                     ],
                     checks: [
-                        [field: '$.artifact.release', expectedValue: 'f33'],
+                        [field: '$.artifact.release', expectedValue: '^f33$'],
                     ]
                 ]
             ]]
