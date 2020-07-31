@@ -8,22 +8,22 @@ properties(
                 string(description: 'CI Message', defaultValue: '', name: 'CI_MESSAGE'),
             ]
         ),
-        //pipelineTriggers(
-        //    [[$class: 'CIBuildTrigger',
-        //        noSquash: true,
-        //        providerData: [
-        //            $class: 'RabbitMQSubscriberProviderData',
-        //            name: 'FedoraMessaging',
-        //            overrides: [
-        //                topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
-        //                queue: 'osci-pipelines-queue-15'
-        //            ],
-        //            checks: [
-        //                [field: '$.artifact.release', expectedValue: '^f33$'],
-        //            ]
-        //        ]
-        //    ]]
-        //)
+        pipelineTriggers(
+            [[$class: 'CIBuildTrigger',
+                noSquash: true,
+                providerData: [
+                    $class: 'RabbitMQSubscriberProviderData',
+                    name: 'FedoraMessaging',
+                    overrides: [
+                        topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
+                        queue: 'osci-pipelines-queue-15'
+                    ],
+                    checks: [
+                        [field: '$.artifact.release', expectedValue: '^f33$'],
+                    ]
+                ]
+            ]]
+        )
     ]
 )
 
