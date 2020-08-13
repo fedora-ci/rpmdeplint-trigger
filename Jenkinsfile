@@ -19,7 +19,7 @@ properties(
                         queue: 'osci-pipelines-queue-15'
                     ],
                     checks: [
-                        [field: '$.artifact.release', expectedValue: '^f33$'],
+                        [field: '$.artifact.release', expectedValue: '^f34$'],
                     ]
                 ]
             ]]
