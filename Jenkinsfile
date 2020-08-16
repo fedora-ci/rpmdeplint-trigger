@@ -1,10 +1,10 @@
 #!groovy
 
 
-def msg
-def artifactId
-def additionalArtifactIds
-def allTaskIds = [] as Set
+// def msg
+// def artifactId
+// def additionalArtifactIds
+// def allTaskIds = [] as Set
 
 pipeline {
 
@@ -30,9 +30,9 @@ pipeline {
     //    )
     //}
 
-    // parameters {
-    //     string(name: 'CI_MESSAGE', defaultValue: '{}', description: 'CI Message')
-    // }
+    parameters {
+        string(name: 'CI_MESSAGE', defaultValue: '{}', description: 'CI Message')
+    }
 
     stages {
         stage('Trigger Testing') {
