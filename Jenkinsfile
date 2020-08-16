@@ -1,10 +1,10 @@
 #!groovy
 
 
-// def msg
-// def artifactId
-// def additionalArtifactIds
-// def allTaskIds = [] as Set
+def msg
+def artifactId
+def additionalArtifactIds
+def allTaskIds = [] as Set
 
 pipeline {
 
@@ -12,23 +12,23 @@ pipeline {
         label 'master'                                                                                                                                        
     }
 
-    //triggers {
-    //    ciBuildTrigger(
-    //        noSquash: true,
-    //        providerList: [
-    //            activeMQSubscriber(
-    //                name: env.FEDORA_CI_MESSAGE_PROVIDER,
-    //                overrides: [
-    //                    topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
-    //                    queue: 'osci-pipelines-queue-15'
-    //                ],
-    //                checks: [
-    //                    [field: '$.artifact.release', expectedValue: '^f34$']
-    //                ]
-    //            )
-    //        ]
-    //    )
-    //}
+    triggers {
+       ciBuildTrigger(
+           noSquash: true,
+           providerList: [
+               activeMQSubscriber(
+                   name: env.FEDORA_CI_MESSAGE_PROVIDER,
+                   overrides: [
+                       topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
+                       queue: 'osci-pipelines-queue-15'
+                   ],
+                   checks: [
+                       [field: '$.artifact.release', expectedValue: '^f34$']
+                   ]
+               )
+           ]
+       )
+    }
 
     parameters {
         string(name: 'CI_MESSAGE', defaultValue: '{}', description: 'CI Message')
@@ -38,22 +38,22 @@ pipeline {
         stage('Trigger Testing') {
             steps {
                 script {
-                    // msg = readJSON text: CI_MESSAGE
-                    echo "test"
-                    // if (msg) {
-                    //     msg['artifact']['builds'].each { build ->
-                    //         allTaskIds.add(build['task_id'])
-                    //     }
+                    msg = readJSON text: CI_MESSAGE
 
-                    //     if (allTaskIds) {
-                    //         allTaskIds.each { taskId ->
-                    //             artifactId = "koji-build:${taskId}"
-                    //             additionalArtifactIds = allTaskIds.findAll{ it != artifactId }.collect{ "koji-build:${it}" }.join(',')
+                    if (msg) {
+                        msg['artifact']['builds'].each { build ->
+                            allTaskIds.add(build['task_id'])
+                        }
 
-                    //             build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
-                    //         }
-                    //     }
-                    // }
+                        if (allTaskIds) {
+                            allTaskIds.each { taskId ->
+                                artifactId = "koji-build:${taskId}"
+                                additionalArtifactIds = allTaskIds.findAll{ it != artifactId }.collect{ "koji-build:${it}" }.join(',')
+
+                                build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
+                            }
+                        }
+                    }
                 }
             }
         }
