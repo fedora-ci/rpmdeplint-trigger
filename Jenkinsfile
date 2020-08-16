@@ -8,7 +8,9 @@ def allTaskIds = [] as Set
 
 pipeline {
 
-    agent none
+    agent {
+        label 'master'                                                                                                                                        
+    }
 
     //triggers {
     //    ciBuildTrigger(
