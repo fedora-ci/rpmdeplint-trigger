@@ -37,7 +37,6 @@ pipeline {
             steps {
                 script {
                     // msg = readJSON text: CI_MESSAGE
-                    def msg
 
                     if (msg) {
                         msg['artifact']['builds'].each { build ->
