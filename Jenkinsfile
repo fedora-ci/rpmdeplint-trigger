@@ -1,32 +1,6 @@
 #!groovy
 
 
-properties(
-    [
-        parameters(
-            [
-                string(description: 'CI Message', defaultValue: '{}', name: 'CI_MESSAGE')
-            ]
-        ),
-        // pipelineTriggers(
-        //    [[$class: 'CIBuildTrigger',
-        //        noSquash: true,
-        //        providerData: [
-        //            $class: 'RabbitMQSubscriberProviderData',
-        //            name: env.FEDORA_CI_MESSAGE_PROVIDER,
-        //            overrides: [
-        //                topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
-        //                queue: 'osci-pipelines-queue-15'
-        //            ],
-        //            checks: [
-        //                [field: '$.artifact.release', expectedValue: '^f34$'],
-        //            ]
-        //        ]
-        //    ]]
-        // )
-    ]
-)
-
 def msg
 def artifactId
 def additionalArtifactIds
@@ -35,6 +9,28 @@ def allTaskIds = [] as Set
 pipeline {
 
     agent none
+
+    triggers {
+        ciBuildTrigger(
+            noSquash: true,
+            providerList: [
+                activeMQSubscriber(
+                    name: env.FEDORA_CI_MESSAGE_PROVIDER,
+                    overrides: [
+                        topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
+                        queue: 'osci-pipelines-queue-15'
+                    ],
+                    checks: [
+                        [field: '$.artifact.release', expectedValue: '^f34$']
+                    ]
+                )
+            ]
+        )
+    }
+
+    parameters {
+        string(name: 'CI_MESSAGE', defaultValue: '{}', description: 'CI Message')
+    }
 
     stages {
         stage('Trigger Testing') {
