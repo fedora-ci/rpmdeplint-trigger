@@ -5,7 +5,7 @@ properties(
     [
         parameters(
             [
-                string(description: 'CI Message', defaultValue: '{}', name: 'CI_MESSAGE'),
+                string(description: 'CI Message', defaultValue: '{}', name: 'CI_MESSAGE')
             ]
         ),
         pipelineTriggers(
