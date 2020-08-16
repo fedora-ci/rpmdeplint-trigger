@@ -28,9 +28,9 @@ pipeline {
     //    )
     //}
 
-    parameters {
-        string(name: 'CI_MESSAGE', defaultValue: '{}', description: 'CI Message')
-    }
+    // parameters {
+    //     string(name: 'CI_MESSAGE', defaultValue: '{}', description: 'CI Message')
+    // }
 
     stages {
         stage('Trigger Testing') {
