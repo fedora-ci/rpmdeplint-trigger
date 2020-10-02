@@ -41,17 +41,22 @@ pipeline {
                     msg = readJSON text: CI_MESSAGE
 
                     if (msg) {
+                        def fedUpdateId = msg['artifact']['id']
+                        // the id in the messsage looks like this: FEDORA-2020-98a8f2073e-bf595b88d9f1e08f534a8b929a60cec255cc3952
+                        // but the correct Fedora/Bodhi Id is just "FEDORA-2020-98a8f2073e"
+                        fedUpdateId = fedUpdateId.reverse().split('-', 2)[1].reverse()
+
                         msg['artifact']['builds'].each { build ->
-                            allTaskIds.add(build['task_id'])
+                            allTaskIds.add("koji-build:${build['task_id']}")
                         }
 
                         if (allTaskIds) {
-                            allTaskIds.each { taskId ->
-                                artifactId = "koji-build:${taskId}"
-                                additionalArtifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
+                            // we can run rpmdeplint just once and then report on the whole update;
+                            // that's why we are using the composite artifact here. example:
+                            // (koji-build:52630695,koji-build:52626876)->fedora-update:FEDORA-2020-98a8f2073e
+                            artifactId = "(${allTaskIds.join(',')})->fedora-update:${fedUpdateId}"
 
-                                build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
-                            }
+                            build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId) ]
                         }
                     }
                 }
