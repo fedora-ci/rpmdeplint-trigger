@@ -4,6 +4,7 @@
 def msg
 def artifactId
 def additionalArtifactIds
+def taskId
 def allTaskIds = [] as Set
 
 pipeline {
@@ -46,12 +47,11 @@ pipeline {
                         }
 
                         if (allTaskIds) {
-                            allTaskIds.each { taskId ->
-                                artifactId = "koji-build:${taskId}"
-                                additionalArtifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
+                            taskId = allTaskIds[0]
+                            artifactId = "koji-build:${taskId}"
+                            additionalArtifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
 
-                                build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
-                            }
+                            build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
                         }
                     }
                 }
