@@ -15,6 +15,7 @@ pipeline {
 
     options {
         buildDiscarder(logRotator(daysToKeepStr: '45', artifactNumToKeepStr: '100'))
+        skipDefaultCheckout()
     }
 
     triggers {
