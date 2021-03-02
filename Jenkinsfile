@@ -55,8 +55,8 @@ pipeline {
                             taskId = allTaskIds[0]
                             artifactId = "koji-build:${taskId}"
                             additionalArtifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
-
-                            build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
+                            echo "Skipped: https://pagure.io/fesco/issue/2583"
+                            // build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
                         }
                     }
                 }
