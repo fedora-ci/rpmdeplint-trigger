@@ -27,7 +27,7 @@ pipeline {
                        queue: 'osci-pipelines-queue-15'
                    ],
                    checks: [
-                       [field: '$.artifact.release', expectedValue: '^f40$']
+                       [field: '$.update.release.dist_tag', expectedValue: '^f40$']
                    ]
                )
            ]
@@ -46,8 +46,8 @@ pipeline {
 
                     if (msg) {
 
-                        if (msg['artifact']['builds'].size() > 20) {
-                            echo "There are way too many (${msg['artifact']['builds'].size()} > 20) builds in the update. Skipping..."
+                        if (msg['update']['builds'].size() > 20) {
+                            echo "There are way too many (${msg['update']['builds'].size()} > 20) builds in the update. Skipping..."
                             return
                         }
 
