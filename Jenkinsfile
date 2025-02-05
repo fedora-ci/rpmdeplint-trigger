@@ -27,7 +27,7 @@ pipeline {
                        queue: 'osci-pipelines-queue-15'
                    ],
                    checks: [
-                       [field: '$.update.release.dist_tag', expectedValue: '^f42$']
+                       [field: '$.update.release.dist_tag', expectedValue: '^f43$']
                    ]
                )
            ]
