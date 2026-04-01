@@ -2,9 +2,6 @@
 
 
 def msg
-def artifactId
-def additionalArtifactIds
-def taskId
 def allTaskIds = [] as Set
 
 pipeline {
@@ -55,13 +52,11 @@ pipeline {
                             allTaskIds.add(build['task_id'])
                         }
 
-                        if (allTaskIds) {
-                            taskId = allTaskIds[0]
-                            artifactId = "koji-build:${taskId}"
-                            additionalArtifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
-
-                            build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [ string(name: 'ARTIFACT_ID', value: artifactId), string(name: 'ADDITIONAL_ARTIFACT_IDS', value: additionalArtifactIds) ]
-                        }
+                        build job: 'fedora-ci/rpmdeplint-pipeline/master', wait: false, parameters: [
+                            string(name: 'BODHI_UPDATE_ID', value: msg['update']['updateid']),
+                            string(name: 'ARTIFACT_IDS', value: allTaskIds.collect{ "koji-build:${it}" }.join(',')),
+                            string(name: 'DIST_GIT_BRANCH', value: msg['update']['release']['branch']),
+                        ]
                     }
                 }
             }
