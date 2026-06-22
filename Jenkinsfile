@@ -24,7 +24,9 @@ pipeline {
                        queue: 'osci-pipelines-queue-15'
                    ],
                    checks: [
-                       [field: '$.update.release.dist_tag', expectedValue: '^f45$']
+                       // Get every update except Flatpack and Container
+                       // See the `ID Prefix`` of the releases in https://bodhi.fedoraproject.org/releases
+                       [field: '$.update.release.id_prefix', expectedValue: '^(FEDORA|FEDORA-EPEL|FEDORA-EPEL-NEXT)$'],
                    ]
                )
            ]
